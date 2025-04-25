@@ -10,6 +10,10 @@ RESET_COLOR="\033[0m"
 check_dependencies() {
     if ! command -v cwebp &> /dev/null; then
         echo -e "${ERROR_COLOR}需要安裝 webp 轉換工具...${RESET_COLOR}"
+        if ! command -v brew &> /dev/null; then
+            echo -e "${ERROR_COLOR}Homebrew 未安裝，請先安裝 Homebrew！${RESET_COLOR}"
+            exit 1
+        fi
         brew install webp
     fi
 }
@@ -30,8 +34,11 @@ convert_to_webp() {
 }
 
 main() {
+    # 獲取腳本自身所在的絕對路徑
+    SCRIPT_PATH="$(cd "$(dirname "$0")" && pwd)"
+    
     # 切換到腳本所在目錄
-    cd "$(dirname "$0")" || { echo -e "${ERROR_COLOR}無法進入目錄！${RESET_COLOR}"; exit 1; }
+    cd "$SCRIPT_PATH" || { echo -e "${ERROR_COLOR}無法進入腳本所在目錄！${RESET_COLOR}"; exit 1; }
 
     # 檢查依賴
     check_dependencies
@@ -60,4 +67,4 @@ main() {
 }
 
 # 執行主程式
-main 
+main
